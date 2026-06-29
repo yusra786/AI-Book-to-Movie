@@ -1,5 +1,4 @@
 # Virtual Environment
-AI/venv/
 venv/
 .venv/
 env/
@@ -11,7 +10,6 @@ env/
 *.pyd
 
 # API Keys & Secrets
-AI/Api.env
 Api.env
 *.env
 
