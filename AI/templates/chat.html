@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with AI Adaptation Guide</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Moviee.css') }}">
+</head>
+<body>
+
+    <div class="video-container">
+        <video autoplay loop muted>
+            <source src="{{ url_for('static', filename='videos/Chat background.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <div class="chat-container">
+        <!-- Floating Glow Circles -->
+        <div class="circle one"></div>
+        <div class="circle two"></div>
+        <div class="circle three"></div>
+
+        <!-- Chat Header -->
+        <div class="header">
+            <div class="header-left">
+                <img src="{{ url_for('static', filename='images/Profile.jpg') }}" alt="User Profile" class="profile-pic" onclick="window.location.href='/dashboard'" title="View Dashboard">
+                <div class="header-info">
+                    <h2>AI Adaptation Guide</h2>
+                    <span class="status-dot"></span><span class="status-text">Online</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="header-btn" id="voiceToggleBtn" onclick="toggleVoiceOutput()" title="Toggle Voice Read Aloud">🔊</button>
+                <button class="header-btn" onclick="clearChatHistory()" title="Clear Chat History">🗑️</button>
+                <button class="header-btn" onclick="window.location.href='/'" title="Back to Home">
+                    <img src="{{ url_for('static', filename='images/Home.jpg') }}" alt="Home" class="home-icon">
+                </button>
+            </div>
+        </div>
+
+        <!-- Popular / Suggested Topics -->
+        <div class="topics">
+            <h3>Suggested Questions</h3>
+            <div class="topics-list">
+                <button onclick="sendMessage('Tell me about Harry Potter')">Tell me about Harry Potter</button>
+                <button onclick="sendMessage('Is the Harry Potter movie faithful to the book?')">Is it faithful?</button>
+                <button onclick="sendMessage('Recommend movies similar to Interstellar')">Similar to Interstellar</button>
+                <button onclick="sendMessage('Should I read the book first or watch the movie first?')">Book or Movie first?</button>
+                <button onclick="sendMessage('What are the major differences between the Gone Girl book and movie?')">Gone Girl Differences</button>
+            </div>
+        </div>
+
+        <!-- Chat Box -->
+        <div class="chat-box" id="chatBox">
+            <div class="message bot">
+                Welcome! I am your AI Adaptation Guide. Ask me anything about books and movie adaptations, comparisons, ratings, directors, authors, and recommendations!
+            </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="chat-input-wrapper">
+            <div class="chat-input">
+                <input type="text" id="userInput" placeholder="Ask about any book or movie adaptation..." onkeypress="handleKeyPress(event)">
+                <button id="micButton" class="chat-input-btn" title="Speak Question">🎙️</button>
+                <button onclick="sendMessage()" class="chat-input-btn send" title="Send Message">➤</button>
+            </div>
+        </div>
+
+        <!-- AI Recommendations Button -->
+        <button class="recommend-btn" onclick="window.location.href='/recommendations'">AI Recommendations</button>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/Movie.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AI Adaptation Guide</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Moviee.css') }}">
+</head>
+<body>
+
+    <div class="video-container">
+        <video autoplay loop muted>
+            <source src="{{ url_for('static', filename='videos/Background Video.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <!-- Glowing Background Elements -->
+    <div class="circle one"></div>
+    <div class="circle two"></div>
+    <div class="circle three"></div>
+
+    <div class="auth-page-container">
+        <div class="auth-header">
+            <h1 style="font-size: 1.8rem;">AI Adaptation Guide</h1>
+            <p style="margin-bottom: 0; font-size: 0.9rem;">Sign in to access your chat assistant and ratings.</p>
+        </div>
+
+        <div class="auth-toggle">
+            <div class="auth-toggle-slider" id="authSlider"></div>
+            <button id="loginTabBtn" class="active" onclick="switchTab('login')">Login</button>
+            <button id="signupTabBtn" onclick="switchTab('signup')">Sign Up</button>
+        </div>
+
+        <div style="overflow: hidden; width: 100%;">
+            <div class="auth-form-wrapper" id="formWrapper">
+                <!-- Login Slide -->
+                <div class="auth-slide">
+                    <form class="auth-form" onsubmit="handleAuth(event, 'login')">
+                        <input type="email" id="loginEmail" placeholder="Email Address" required />
+                        <input type="password" id="loginPassword" placeholder="Password" required />
+                        <button type="submit" style="margin-top: 10px;">Sign In</button>
+                    </form>
+                </div>
+
+                <!-- Sign Up Slide -->
+                <div class="auth-slide">
+                    <form class="auth-form" onsubmit="handleAuth(event, 'signup')">
+                        <input type="text" id="signupUsername" placeholder="Username" required />
+                        <input type="email" id="signupEmail" placeholder="Email Address" required />
+                        <input type="password" id="signupPassword" placeholder="Password" required />
+                        <button type="submit" style="margin-top: 10px;">Create Account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Toast Notification -->
+    <div class="toast-notification" id="toast">Authentication Success!</div>
+
+    <script>
+        // Check if already logged in, redirect to chat
+        if (localStorage.getItem("user_logged_in") === "true") {
+            window.location.href = "/chat";
+        }
+
+        function switchTab(tab) {
+            const slider = document.getElementById("authSlider");
+            const wrapper = document.getElementById("formWrapper");
+            const loginBtn = document.getElementById("loginTabBtn");
+            const signupBtn = document.getElementById("signupTabBtn");
+
+            if (tab === 'login') {
+                slider.classList.remove("signup-active");
+                wrapper.classList.remove("signup-active");
+                loginBtn.classList.add("active");
+                signupBtn.classList.remove("active");
+            } else {
+                slider.classList.add("signup-active");
+                wrapper.classList.add("signup-active");
+                loginBtn.classList.remove("active");
+                signupBtn.classList.add("active");
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.innerText = message;
+            toast.classList.add("show");
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 2500);
+        }
+
+        function handleAuth(event, type) {
+            event.preventDefault();
+
+            if (type === 'login') {
+                const email = document.getElementById("loginEmail").value;
+                const username = email.split('@')[0]; // fallback username
+                
+                // Save session info in localStorage
+                localStorage.setItem("user_logged_in", "true");
+                if (!localStorage.getItem("profile_username")) {
+                    localStorage.setItem("profile_username", username);
+                    localStorage.setItem("profile_email", email);
+                    localStorage.setItem("profile_avatar", "/static/images/Profile.jpg");
+                }
+                
+                showToast(`Welcome back, ${localStorage.getItem("profile_username") || username}!`);
+                setTimeout(() => {
+                    window.location.href = "/chat";
+                }, 1200);
+            } else {
+                const username = document.getElementById("signupUsername").value;
+                const email = document.getElementById("signupEmail").value;
+                
+                localStorage.setItem("user_logged_in", "true");
+                localStorage.setItem("profile_username", username);
+                localStorage.setItem("profile_email", email);
+                localStorage.setItem("profile_avatar", "/static/images/Profile.jpg");
+                
+                showToast(`Account created! Welcome, ${username}!`);
+                setTimeout(() => {
+                    window.location.href = "/chat";
+                }, 1200);
+            }
+        }
+    </script>
+</body>
+</html>

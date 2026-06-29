@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings & Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Moviee.css') }}">
+</head>
+<body>
+    <!-- Glowing Background Elements -->
+    <div class="circle one"></div>
+    <div class="circle two"></div>
+
+    <div class="dashboard-container">
+        
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <img id="sidebarAvatar" src="/static/images/Profile.jpg" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid #ff0055; object-fit: cover;">
+                <h3 id="sidebarUsername" style="margin-top: 10px; color: #fff; font-size: 1.1rem;">User</h3>
+            </div>
+            <h2>Guide Dashboard</h2>
+            <ul>
+                <li><a href="/chat">Chat Assistant</a></li>
+                <li><a href="/recommendations">Recommendations</a></li>
+                <li><a href="/dashboard" class="active">Profile Settings</a></li>
+                <li><a href="#" onclick="logoutUser()">Log Out</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <div class="content-header">
+                <h1>Profile & Settings</h1>
+                <p style="color: #cbd5e0; margin-top: 5px; margin-bottom: 0;">Customize your profile details, avatar, and assistant configuration.</p>
+            </div>
+
+            <!-- Grid Layout -->
+            <div class="dashboard-grid">
+                
+                <!-- Settings Card (Left) -->
+                <div class="settings-card">
+                    <h2 style="font-size: 1.25rem; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 10px;">Account Details</h2>
+                    <form id="profileForm" onsubmit="saveProfile(event)">
+                        
+                        <!-- Avatar Selection -->
+                        <div class="form-control" style="margin-bottom: 20px;">
+                            <label>Choose Profile Avatar</label>
+                            <div class="avatar-selector">
+                                <img src="/static/images/Profile.jpg" class="avatar-option" onclick="selectAvatar('/static/images/Profile.jpg', this)">
+                                <img src="/static/images/Chatbot.jpg" class="avatar-option" onclick="selectAvatar('/static/images/Chatbot.jpg', this)">
+                                <img src="/static/images/Dune.jpg" class="avatar-option" onclick="selectAvatar('/static/images/Dune.jpg', this)">
+                                <img src="/static/images/Sherlock Holmes.jpg" class="avatar-option" onclick="selectAvatar('/static/images/Sherlock Holmes.jpg', this)">
+                            </div>
+                        </div>
+
+                        <div class="form-group-grid">
+                            <div class="form-control">
+                                <label for="profileUsername">Username</label>
+                                <input type="text" id="profileUsername" required>
+                            </div>
+                            <div class="form-control">
+                                <label for="profileEmail">Email Address</label>
+                                <input type="email" id="profileEmail" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group-grid">
+                            <div class="form-control">
+                                <label for="favBook">Favorite Book</label>
+                                <input type="text" id="favBook" placeholder="e.g. The Hobbit">
+                            </div>
+                            <div class="form-control">
+                                <label for="favMovie">Favorite Movie</label>
+                                <input type="text" id="favMovie" placeholder="e.g. Interstellar">
+                            </div>
+                        </div>
+
+                        <div class="form-control" style="margin-bottom: 20px;">
+                            <label for="profileBio">Bio / Adaptation Notes</label>
+                            <textarea id="profileBio" rows="3" placeholder="Add some notes about adaptations you like..."></textarea>
+                        </div>
+
+                        <h2 style="font-size: 1.25rem; margin-top: 30px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 10px;">Voice Settings</h2>
+                        <div class="form-group-grid">
+                            <div class="form-control">
+                                <label for="speechRate">TTS Speed Rate</label>
+                                <select id="speechRate">
+                                    <option value="0.8">0.8x (Slow)</option>
+                                    <option value="1.0" selected>1.0x (Normal)</option>
+                                    <option value="1.2">1.2x (Medium-Fast)</option>
+                                    <option value="1.5">1.5x (Fast)</option>
+                                </select>
+                            </div>
+                            <div class="form-control">
+                                <label for="speechPitch">TTS Pitch</label>
+                                <select id="speechPitch">
+                                    <option value="0.8">0.8 (Low Voice)</option>
+                                    <option value="1.0" selected>1.0 (Standard)</option>
+                                    <option value="1.2">1.2 (High Voice)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn" style="margin-top: 15px; width: 100%;">Save Changes</button>
+                    </form>
+                </div>
+
+                <!-- Stats/Overview Card (Right) -->
+                <div class="stats-card">
+                    <h2 style="font-size: 1.25rem; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 10px;">Assistant Status</h2>
+                    
+                    <div class="stats-list">
+                        <div class="stat-item">
+                            <span class="stat-label">Guide Version</span>
+                            <span class="stat-val">v2.5 (Intelligent RAG)</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Model Engine</span>
+                            <span class="stat-val">Gemini 3.5 Flash</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Saved Conversations</span>
+                            <span class="stat-val" id="statsSavedMsgs">0 messages</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Connected APIs</span>
+                            <span class="stat-val">Gemini, OMDb, Books</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Voice Outputs</span>
+                            <span class="stat-val" id="statsVoiceStatus">Disabled</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Toast Notification -->
+    <div class="toast-notification" id="toast">Profile settings saved!</div>
+
+    <script>
+        // Redirect to login if not logged in
+        if (localStorage.getItem("user_logged_in") !== "true") {
+            window.location.href = "/login";
+        }
+
+        let selectedAvatarPath = "/static/images/Profile.jpg";
+
+        // Load profile settings on start
+        document.addEventListener("DOMContentLoaded", function () {
+            const username = localStorage.getItem("profile_username") || "User";
+            const email = localStorage.getItem("profile_email") || "";
+            const favBook = localStorage.getItem("profile_fav_book") || "";
+            const favMovie = localStorage.getItem("profile_fav_movie") || "";
+            const bio = localStorage.getItem("profile_bio") || "";
+            const rate = localStorage.getItem("profile_speech_rate") || "1.0";
+            const pitch = localStorage.getItem("profile_speech_pitch") || "1.0";
+            const avatar = localStorage.getItem("profile_avatar") || "/static/images/Profile.jpg";
+
+            document.getElementById("profileUsername").value = username;
+            document.getElementById("profileEmail").value = email;
+            document.getElementById("favBook").value = favBook;
+            document.getElementById("favMovie").value = favMovie;
+            document.getElementById("profileBio").value = bio;
+            document.getElementById("speechRate").value = rate;
+            document.getElementById("speechPitch").value = pitch;
+
+            // Set sidebar details
+            document.getElementById("sidebarUsername").innerText = username;
+            document.getElementById("sidebarAvatar").src = avatar;
+            selectedAvatarPath = avatar;
+
+            // Highlight selected avatar
+            highlightAvatarOption(avatar);
+
+            // Set Statistics info
+            const history = JSON.parse(localStorage.getItem("ai_chat_history")) || [];
+            document.getElementById("statsSavedMsgs").innerText = `${history.length} messages`;
+            
+            const voiceEnabled = localStorage.getItem("voice_output_enabled") === "true";
+            document.getElementById("statsVoiceStatus").innerText = voiceEnabled ? "🔊 Enabled" : "🔇 Disabled";
+        });
+
+        function selectAvatar(path, element) {
+            selectedAvatarPath = path;
+            
+            // Remove selection class from all options
+            const options = document.querySelectorAll(".avatar-option");
+            options.forEach(opt => opt.classList.remove("selected"));
+            
+            // Add class to clicked option
+            element.classList.add("selected");
+        }
+
+        function highlightAvatarOption(path) {
+            const options = document.querySelectorAll(".avatar-option");
+            options.forEach(opt => {
+                // Get absolute relative src path comparison
+                if (opt.src.includes(path)) {
+                    opt.classList.add("selected");
+                }
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.innerText = message;
+            toast.classList.add("show");
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 2500);
+        }
+
+        function saveProfile(event) {
+            event.preventDefault();
+
+            const username = document.getElementById("profileUsername").value;
+            const email = document.getElementById("profileEmail").value;
+            const favBook = document.getElementById("favBook").value;
+            const favMovie = document.getElementById("favMovie").value;
+            const bio = document.getElementById("profileBio").value;
+            const rate = document.getElementById("speechRate").value;
+            const pitch = document.getElementById("speechPitch").value;
+
+            // Update localStorage
+            localStorage.setItem("profile_username", username);
+            localStorage.setItem("profile_email", email);
+            localStorage.setItem("profile_fav_book", favBook);
+            localStorage.setItem("profile_fav_movie", favMovie);
+            localStorage.setItem("profile_bio", bio);
+            localStorage.setItem("profile_speech_rate", rate);
+            localStorage.setItem("profile_speech_pitch", pitch);
+            localStorage.setItem("profile_avatar", selectedAvatarPath);
+
+            // Update sidebar elements
+            document.getElementById("sidebarUsername").innerText = username;
+            document.getElementById("sidebarAvatar").src = selectedAvatarPath;
+
+            showToast("Profile Settings Saved Successfully!");
+        }
+
+        function logoutUser() {
+            localStorage.removeItem("user_logged_in");
+            alert("Logged out successfully!");
+            window.location.href = "/login";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# Virtual Environment
+AI/venv/
+venv/
+.venv/
+env/
+
+# Python Cache
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# API Keys & Secrets
+AI/Api.env
+Api.env
+*.env
+
+# IDE & OS System files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

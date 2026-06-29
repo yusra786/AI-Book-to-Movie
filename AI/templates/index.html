@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Adaptation Guide</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Moviee.css') }}">
+</head>
+<body>
+
+    <div class="video-container">
+        <video autoplay loop muted>
+            <source src="{{ url_for('static', filename='videos/Background Video.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <!-- Glowing Background Elements -->
+    <div class="circle one"></div>
+    <div class="circle two"></div>
+    <div class="circle three"></div>
+
+    <div class="home-container">
+        <img src="{{ url_for('static', filename='images/Chatbot.jpg') }}" alt="AI Bot" class="ai-bot">
+        <h1>AI Adaptation Guide</h1>
+        <p>Your intelligent assistant for exploring book-to-movie adaptations, comparisons, dynamic ratings, and recommendations.</p>
+        <button class="btn" onclick="window.location.href='{{ url_for('chat_page') }}'">Get Started</button>
+    </div>
+
+</body>
+</html>

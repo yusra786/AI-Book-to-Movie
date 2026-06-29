@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Adaptation Recommendations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Moviee.css') }}">
+</head>
+<body>
+
+    <!-- Glowing Background Elements -->
+    <div class="circle one"></div>
+    <div class="circle two"></div>
+
+    <div class="recommendations-container">
+        <h1>AI Recommendations</h1>
+        <p>Top book-to-movie adaptations handpicked and rated by our AI guide.</p>
+
+        <div class="recommendation-grid" id="recGrid">
+            <!-- Dynamically populated -->
+            <p style="text-align: center; color: #a4b0be; width: 100%;">Loading recommendations...</p>
+        </div>
+
+        <button class="btn" onclick="window.location.href='{{ url_for('chat_page') }}'">Back to Chat</button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async function() {
+            try {
+                const response = await fetch("/api/recommendations");
+                const data = await response.json();
+                const grid = document.getElementById("recGrid");
+                grid.innerHTML = ""; // Clear loader
+                
+                data.forEach(item => {
+                    const card = document.createElement("div");
+                    card.className = "rec-card";
+                    
+                    // Construct poster URL dynamically
+                    const imageUrl = `/static/images/${item.image}`;
+                    
+                    card.innerHTML = `
+                        <img src="${imageUrl}" alt="${item.title} Poster">
+                        <div class="rec-details">
+                            <div class="rec-title">${item.title}</div>
+                            <div class="rec-book">Based on: ${item.book}</div>
+                            <div class="rec-desc">${item.description}</div>
+                            <div class="rec-rating">★ IMDb: ${item.imdbRating}/10</div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            } catch (error) {
+                console.error("Error loading recommendations:", error);
+                document.getElementById("recGrid").innerHTML = `
+                    <p style="text-align: center; color: #ff0055; width: 100%;">Failed to load recommendations. Please try again later.</p>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
